@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovieHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🔹 STICKY HEADER -->
+<header class="topbar">
+
+  <div class="left">
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <h1>🎬 MovieHub</h1>
+  </div>
+
+  <div class="right">
+    <div class="profile" onclick="toggleProfileMenu()">
+      <img src="img/profile.jpg" class="avatar">
+      <span class="caret">▾</span>
+    </div>
+
+    <div id="profileMenu" class="dropdown">
+      <a href="profile.html">Profile</a>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+</header>
+
+<!-- 🔹 MAIN CONTENT -->
+<div class="container">
+
+  <!-- 🎬 ADD MOVIE (ONLY ONE INPUT) -->
+  <div class="card">
+  <h3>Add Movie</h3>
+
+  <div class="add-row">
+    <input
+      id="title"
+      placeholder="Enter movie name"
+      onblur="autoFillFromTMDB()"
+    >
+
+    <button class="add-btn" onclick="addMovie()">+</button>
+  </div>
+  <div id="tmdbLoader" class="loader hidden">
+  <span class="spinner"></span>
+  Fetching movie details…
+</div>
+
+</div>
+
+  <!-- 🎯 GENRE FILTER CHIPS -->
+  <div class="card">
+    <h3>Filter by Genre</h3>
+    <div id="genreFilters" class="chips"></div>
+  </div>
+
+  <!-- 🎥 MOVIE GRID -->
+  <div class="card">
+    <h3>Your Movies</h3>
+    <div id="movies" class="grid"></div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
