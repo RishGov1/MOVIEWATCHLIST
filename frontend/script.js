@@ -77,7 +77,7 @@ function toggleMenu() {
 function autoFillFromTMDB() {
   const titleInput = document.getElementById("title");
   const loader = document.getElementById("tmdbLoader");
-  const addBtn = document.getElementById("addBtn");
+  const addBtn = document.getElementById("addBtn") || document.querySelector(".add-btn");
 
   if (!titleInput || !titleInput.value.trim()) return;
 
@@ -86,9 +86,9 @@ function autoFillFromTMDB() {
   AUTO_YEAR = null;
   AUTO_TMDB_ID = null;
 
-  // Show loader & disable add button
+  // Show loader & disable add button (if available)
   loader.classList.remove("hidden");
-  addBtn.disabled = true;
+  if (addBtn) addBtn.disabled = true;
 
   fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(titleInput.value)}`
@@ -119,7 +119,7 @@ function autoFillFromTMDB() {
     .finally(() => {
       // Hide loader & enable add button
       loader.classList.add("hidden");
-      addBtn.disabled = false;
+      if (addBtn) addBtn.disabled = false;
     });
 }
 
