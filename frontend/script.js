@@ -1,24 +1,15 @@
 const API = "http://localhost:3000";
 const TMDB_KEY = "1a64abc441eb2dd9a775e120969457fe";
-
 const USER_ID =
   localStorage.getItem("userId") ||
   sessionStorage.getItem("userId");
-
 if (location.pathname.includes("dashboard") && !USER_ID) {
   location.href = "login.html";
 }
-
-/***********************
-  GLOBAL TMDB CACHE
-************************/
 let AUTO_GENRES = null;
 let AUTO_YEAR = null;
 let AUTO_TMDB_ID = null;
 
-/***********************
-  AUTH
-************************/
 function login() {
   fetch(API + "/auth/login", {
     method: "POST",
@@ -47,10 +38,6 @@ function logout() {
   sessionStorage.clear();
   location.href = "login.html";
 }
-
-/***********************
-  HEADER UI
-************************/
 function toggleProfileMenu() {
   const menu = document.getElementById("profileMenu");
   if (!menu) return;
@@ -70,10 +57,6 @@ function toggleMenu() {
   // Placeholder for mobile sidebar
   alert("Mobile menu coming soon");
 }
-
-/***********************
-  TMDB AUTO-FILL
-************************/
 function autoFillFromTMDB() {
   const titleInput = document.getElementById("title");
   const loader = document.getElementById("tmdbLoader");
@@ -81,12 +64,10 @@ function autoFillFromTMDB() {
 
   if (!titleInput || !titleInput.value.trim()) return;
 
-  // Reset previous TMDB data
   AUTO_GENRES = null;
   AUTO_YEAR = null;
   AUTO_TMDB_ID = null;
 
-  // Show loader & disable add button (if available)
   loader.classList.remove("hidden");
   if (addBtn) addBtn.disabled = true;
 
@@ -117,16 +98,11 @@ function autoFillFromTMDB() {
       alert("Could not fetch movie details from TMDB");
     })
     .finally(() => {
-      // Hide loader & enable add button
       loader.classList.add("hidden");
       if (addBtn) addBtn.disabled = false;
     });
 }
 
-
-/***********************
-  ADD MOVIE (DUP SAFE)
-************************/
 function addMovie() {
   const titleInput = document.getElementById("title");
 
@@ -165,9 +141,6 @@ function addMovie() {
     });
 }
 
-/***********************
-  POSTER FETCH
-************************/
 function fetchPoster(title, callback) {
   fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}`
@@ -189,9 +162,6 @@ function fetchPoster(title, callback) {
     });
 }
 
-/***********************
-  WATCHLIST
-************************/
 function toggleWatch(movieId, watched) {
   fetch(API + "/movies/watch/" + movieId, {
     method: "PUT",
@@ -200,9 +170,6 @@ function toggleWatch(movieId, watched) {
   }).then(loadMovies);
 }
 
-/***********************
-  RATINGS
-************************/
 function rate(movieId, rating) {
   fetch(API + "/movies/rate", {
     method: "POST",
@@ -215,9 +182,6 @@ function rate(movieId, rating) {
   }).then(loadMovies);
 }
 
-/***********************
-  GENRE FILTER
-************************/
 let ACTIVE_GENRE = null;
 
 function renderGenreChips(genres) {
@@ -237,9 +201,6 @@ function filterByGenre(genre) {
   loadMovies();
 }
 
-/***********************
-  LOAD MOVIES
-************************/
 function loadMovies() {
   fetch(API + "/movies/" + USER_ID)
     .then(r => r.json())
@@ -301,9 +262,6 @@ function loadMovies() {
     });
 }
 
-/***********************
-  INIT
-************************/
 if (document.getElementById("movies")) {
   loadMovies();
 }
