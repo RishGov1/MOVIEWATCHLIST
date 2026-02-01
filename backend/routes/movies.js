@@ -148,4 +148,46 @@ router.put("/watch/:movieId", (req, res) => {
 });
 
 
+/* DELETE MOVIE (OWNER ONLY) */
+router.delete("/:id", (req, res) => {
+  const userId = req.query.user_id || req.body.user_id;
+  if (!userId) return res.status(400).send("Missing user_id");
+
+  db.query(
+    "DELETE FROM movies WHERE id=? AND user_id=?",
+    [req.params.id, userId],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.sendStatus(500);
+      }
+
+      if (result.affectedRows) {
+        console.log(`Movie ${req.params.id} deleted by user ${userId}`);
+        return res.send("Movie deleted");
+      }
+
+      // No rows deleted — check if the movie exists at all
+      db.query(
+        "SELECT user_id FROM movies WHERE id=?",
+        [req.params.id],
+        (err2, rows) => {
+          if (err2) {
+            console.error(err2);
+            return res.sendStatus(500);
+          }
+          if (!rows.length) {
+            return res.status(404).send("Movie not found");
+          }
+          // Exists but not owned by this user
+          console.log(
+            `User ${userId} attempted to delete movie ${req.params.id} owned by ${rows[0].user_id}`
+          );
+          return res.status(403).send("Not owner");
+        }
+      );
+    }
+  );
+});
+
 module.exports = router;

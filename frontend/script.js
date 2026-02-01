@@ -182,6 +182,9 @@ function rate(movieId, rating) {
   }).then(loadMovies);
 }
 
+// deleteMovie removed — deletion disabled in frontend
+
+
 let ACTIVE_GENRE = null;
 
 function renderGenreChips(genres) {
